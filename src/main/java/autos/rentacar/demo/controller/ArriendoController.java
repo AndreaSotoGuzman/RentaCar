@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.ArriendoModel;
 import org.springframework.http.HttpStatus;
+import autos.rentacar.demo.repository.ArriendoRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -26,53 +29,78 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/arriendo")
 public class ArriendoController {
 
-    @GetMapping()
-    public List<ArriendoModel> list() {
-        return ArriendoModel.arriendo;
+   @Autowired
+   private ArriendoRepository arriendoRepository;
+    
+
+  @GetMapping()
+    public Iterable<ArriendoModel> listarTodos() {
+        
+        return arriendoRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ArriendoModel get(@PathVariable String id) {
-
-        ArriendoModel arriendo = new ArriendoModel();
-
-        return arriendo.buscaArriendo(Integer.parseInt(id));
+   @GetMapping()
+    public ResponseEntity<ArriendoModel> muestraUnaArriendo(@PathVariable String id) {
+        
+        Optional<ArriendoModel> aOptional = arriendoRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+            ArriendoModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.FOUND);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        
+        
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ArriendoModel> editarArriendo(@PathVariable String id, @RequestBody ArriendoModel arriendoEditar) {
-
-        ArriendoModel arriendo = new ArriendoModel();
-
-        return new ResponseEntity<>(arriendo.editarArriendo(Integer.parseInt(id), arriendoEditar), HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody ArriendoModel nuevoArriendo) {
-
-        ArriendoModel arriendo = new ArriendoModel();
-
-        if (arriendo.nuevoArriendo(nuevoArriendo)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+    public ResponseEntity<ArriendoModel> editaArriendo(@PathVariable String id, @RequestBody ArriendoModel arriendoEditar) {
+        
+         Optional<ArriendoModel> aOptional = arriendoRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           ArriendoModel aEncontrado = aOptional.get();  
+            
+            arriendoEditar.setIdArriendo(aEncontrado.getIdArriendo());
+                                
+            arriendoRepository.save(arriendoEditar);           
+            return new ResponseEntity<>(arriendoEditar, HttpStatus.OK);
+            
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-
+        
+    }
+    
+     @PostMapping
+    public ResponseEntity<?> agregarArriendo(@RequestBody ArriendoModel nuevoArriendo) {
+        
+      nuevoArriendo = arriendoRepository.save(nuevoArriendo);
+        
+      Optional<ArriendoModel> aOptional = arriendoRepository.findById(nuevoArriendo.getIdArriendo());      
+        if (aOptional.isPresent()) {            
+            ArriendoModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+      
+        
     }
 
-    @DeleteMapping("/{id}")
+     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
-        ArriendoModel arriendo = new ArriendoModel();
-
-        if (arriendo.elimnarArriendo(Integer.parseInt(id))) {
-
-            return new ResponseEntity<>(HttpStatus.OK);
-
-        } else {
-
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        
+        Optional<ArriendoModel> aOptional = arriendoRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           ArriendoModel aEncontrado = aOptional.get();
+            
+            arriendoRepository.deleteById(aEncontrado.getIdArriendo());
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{ 
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
         }
 
-    }
-
+}
 }
