@@ -6,13 +6,21 @@
 package autos.rentacar.demo.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author Andreita
  */
+@Entity
+@Table (name="carroceria")
 public class CarroceriaModel {
-
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCarroceria;
     private String nombreCarroceria;
     private String detalle;
@@ -57,78 +65,6 @@ public class CarroceriaModel {
         this.detalle = detalle;
     }
 
-    public boolean nuevoCarroceria(CarroceriaModel nuevoCarroceria) { //void no tiene retorno
-
-        int id = 0;
-
-        if (!carroceria.isEmpty()) {
-            for (CarroceriaModel a : carroceria) {
-
-                if (a.getIdCarroceria() > id) {
-                    id = a.getIdCarroceria();
-
-                }
-            }
-        }
-        id++;
-        carroceria.add(new CarroceriaModel(id, nuevoCarroceria.getNombreCarroceria(), nuevoCarroceria.getDetalle()));
-        return true;
-
-    }
-
-    public CarroceriaModel buscaCarroceria(int idCarroceriaBuscar) { // función necesita un retorno
-
-        CarroceriaModel carroceriaEncontrado = null;
-        if (!carroceria.isEmpty()) {
-            for (CarroceriaModel a : carroceria) {
-
-                if (a.getIdCarroceria() == idCarroceriaBuscar) {
-                    carroceriaEncontrado = a;
-
-                }
-
-            }
-
-        }
-        return carroceriaEncontrado;
-    }
-
-    public CarroceriaModel editarCarroceria(int idCarroceria, CarroceriaModel carroceriaEditar) {
-
-        CarroceriaModel carroceriaEditado = null;
-        if (!carroceria.isEmpty()) {
-            for (CarroceriaModel a : carroceria) {
-
-                if (a.getIdCarroceria() == idCarroceria) {
-                    a.setNombreCarroceria(carroceriaEditar.getNombreCarroceria());
-                    a.setDetalle(carroceriaEditar.getDetalle());
-
-                    carroceriaEditado = a;
-                }
-
-            }
-
-        }
-        return carroceriaEditado;
-    }
-
-    public boolean eliminarCarroceria(int id) {
-
-        CarroceriaModel carroceriaEliminado = null;
-
-        if (!carroceria.isEmpty()) {
-            for (CarroceriaModel a : carroceria) {
-
-                if (a.getIdCarroceria() == id) {
-                    carroceriaEliminado = a;
-
-                }
-
-            }
-        }
-        carroceria.remove(carroceriaEliminado);
-        return true;
-
-    }
+    
 
 }
