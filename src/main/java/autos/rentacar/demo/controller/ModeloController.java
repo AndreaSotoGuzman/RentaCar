@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.ModeloModel;
+import autos.rentacar.demo.repository.ModeloRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 /**
  *
@@ -25,49 +28,79 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/modelo")
 public class ModeloController {
     
-    @GetMapping()
-    public List<ModeloModel> list() {
+   @Autowired
+   private ModeloRepository modeloRepository;
+    
+
+  @GetMapping()
+    public Iterable<ModeloModel> listarTodos() {
+        
+        return modeloRepository.findAll();
+    }
+
+   @GetMapping()
+    public ResponseEntity<ModeloModel> muestraUnModelo(@PathVariable String id) {
+        
+        Optional<ModeloModel> aOptional = modeloRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+            ModeloModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.FOUND);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         
         
-        return ModeloModel.modelo;
     }
-    
-    @GetMapping("/{id}")
-    public ModeloModel get(@PathVariable String id) {
-          
-        ModeloModel modelo = new ModeloModel();
-        return modelo.buscaModelo(Integer.parseInt(id));
-    }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody ModeloModel editarModelo) {
-         ModeloModel modelo = new ModeloModel();
+    public ResponseEntity<ModeloModel> editaModelo(@PathVariable String id, @RequestBody ModeloModel modeloEditar) {
         
-        return new ResponseEntity<>(modelo.editarModelo(Integer.parseInt(id), editarModelo), HttpStatus.OK);
+         Optional<ModeloModel> aOptional = modeloRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           ModeloModel aEncontrado = aOptional.get();  
+            
+            modeloEditar.setIdModelo(aEncontrado.getIdModelo());
+                                
+            modeloRepository.save(modeloEditar);           
+            return new ResponseEntity<>(modeloEditar, HttpStatus.OK);
+            
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        
     }
     
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody  ModeloModel nuevoModelo) {
-         ModeloModel modelo = new ModeloModel();
-         
-         if(modelo.nuevoModelo(modelo)){
-              return new ResponseEntity<>(HttpStatus.CREATED);
-         }else{
-             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-         }
+     @PostMapping
+    public ResponseEntity<?> agregarModelo(@RequestBody ModeloModel nuevoModelo) {
         
-    }
-    
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-         ModeloModel modelo = new ModeloModel();
-         
-         if(modelo.elimnarModelo(Integer.parseInt(id))){
-             return new ResponseEntity<>(HttpStatus.OK);
-         }else{
-             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-         }
+      nuevoModelo = modeloRepository.save(nuevoModelo);
+        
+      Optional<ModeloModel> aOptional = modeloRepository.findById(nuevoModelo.getIdModelo());      
+        if (aOptional.isPresent()) {            
+            ModeloModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
       
+        
     }
+
+     @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        
+        Optional<ModeloModel> aOptional = modeloRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+          ModeloModel aEncontrado = aOptional.get();
+            
+            modeloRepository.deleteById(aEncontrado.getIdModelo());
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{ 
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }
+
     
+}
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.TransmisionModel;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -26,47 +28,79 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/transmision")
 public class TransmisionController {
     
-    @GetMapping()
-    public List<TransmisionModel> list() {
-        
-        return TransmisionModel.transmision;
-    }
+    @Autowired
+   private TransmisionRepository transmisionRepository;
     
-    @GetMapping("/{id}")
-    public TransmisionModel get(@PathVariable String id) {
-        TransmisionModel transmision = new TransmisionModel();
+
+  @GetMapping()
+    public Iterable<TransmisionModel> listarTodos() {
         
-        return transmision.buscaTransmision(Integer.parseInt(id));
+        return transmisionRepository.findAll();
     }
-    
+
+   @GetMapping()
+    public ResponseEntity<TransmisionModel> muestraUnaTransmision(@PathVariable String id) {
+        
+        Optional<TransmisionModel> aOptional = transmisionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+            TransmisionModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.FOUND);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        
+        
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody TransmisionModel transmisionEditar) {
-         TransmisionModel transmision = new TransmisionModel();
-         
-        return new ResponseEntity<>(transmision.editarTransmision(Integer.parseInt(id), transmisionEditar), HttpStatus.CREATED);
-    }
-    
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody  TransmisionModel nuevoTransmision) {
-         TransmisionModel transmision = new TransmisionModel();
-         if(transmision.nuevoTransmision(nuevoTransmision)){
-             return new ResponseEntity<>(HttpStatus.CREATED);
-         }else{
-             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-         }
+    public ResponseEntity<TransmisionModel> editaArriendo(@PathVariable String id, @RequestBody TransmisionModel transmisionEditar) {
+        
+         Optional<TransmisionModel> aOptional = transmisionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           TransmisionModel aEncontrado = aOptional.get();  
+            
+            transmisionEditar.setIdTransmision(aEncontrado.getIdTransmision());
+                                
+            transmisionRepository.save(transmisionEditar);           
+            return new ResponseEntity<>(transmisionEditar, HttpStatus.OK);
+            
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         
     }
     
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-         TransmisionModel transmision = new TransmisionModel();
-         
-         if(transmision.eliminarTransmision(Integer.parseInt(id))){
-              return new ResponseEntity<>(HttpStatus.OK);
-         }else{
-              return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-         }
-       
+     @PostMapping
+    public ResponseEntity<?> agregarTransmision(@RequestBody TransmisionModel nuevoTransmision) {
+        
+      nuevoTransmision = transmisionRepository.save(nuevoTransmision);
+        
+      Optional<TransmisionModel> aOptional = transmisionRepository.findById(nuevoTransmision.getIdTransmision());      
+        if (aOptional.isPresent()) {            
+            TransmisionModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+      
+        
     }
+
+     @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        
+        Optional<TransmisionModel> aOptional = transmisionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           TransmisionModel aEncontrado = aOptional.get();
+            
+            transmisionRepository.deleteById(aEncontrado.getIdTransmision());
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{ 
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }
+
+}
     
 }

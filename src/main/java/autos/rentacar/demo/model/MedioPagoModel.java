@@ -6,19 +6,26 @@
 package autos.rentacar.demo.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author Andreita
  */
+@Entity
+@Table (name ="medioPago")
 public class MedioPagoModel {
-    
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
   private  int idMedioPago;
   private  String nombreMedioPago;
   private  String detalle;
     
-    public static ArrayList<MedioPagoModel> medioPago = new ArrayList<>();
-    
+      
     
     public int getIdMedioPago() {
         return idMedioPago;
@@ -59,79 +66,5 @@ public class MedioPagoModel {
     }
     
     
-   public boolean nuevoMedioPago(MedioPagoModel nuevoMedioPago){ //void no tiene retorno
-        
-        int id = 0;
-        
-        if(!medioPago.isEmpty()){
-            for (MedioPagoModel a : medioPago) {
-                
-                if(a.getIdMedioPago()>id){
-                    id = a.getIdMedioPago();
-                    
-                }
-            }
-        }
-        id++;
-       medioPago.add(new MedioPagoModel(id, nuevoMedioPago.getNombreMedioPago(), nuevoMedioPago.getDetalle()));
-        return true;
-        
-    }
-    
-    public MedioPagoModel buscaMedioPago(int idMedioPagoBuscar){ // función necesita un retorno
-        
-        MedioPagoModel medioPagoEncontrado = null;
-        if(!medioPago.isEmpty()){
-            for (MedioPagoModel a : medioPago) {
-                
-             if(a.getIdMedioPago()== idMedioPagoBuscar) {
-                medioPagoEncontrado = a;
-                 
-             }  
-                
-            }
-            
-        }
-        return medioPagoEncontrado;
-    }
-    
-    public MedioPagoModel editarMedioPago(int idMedioPago, MedioPagoModel medioPagoEditar){
-        
-        
-        MedioPagoModel medioPagoEditado = null;
-        if(!medioPago.isEmpty()){
-            for (MedioPagoModel a : medioPago) {
-                
-             if(a.getIdMedioPago()== idMedioPago) {
-                 a.setNombreMedioPago(medioPagoEditar.getNombreMedioPago());
-                 a.setDetalle(medioPagoEditar.getDetalle());
-                 
-                 medioPagoEditado = a;
-             }  
-                
-            }
-            
-        }
-        return  medioPagoEditado;
-    }
-    
-    public boolean eliminarMedioPago (int id){
-      
-   MedioPagoModel medioPagoEliminado = null;
-        
-          if(!medioPago.isEmpty()){
-            for ( MedioPagoModel a :medioPago) {
-                
-             if(a.getIdMedioPago()== id) {
-                 medioPagoEliminado = a;
-                 
-             }  
-                
-            }
-    }
-         
-          medioPago.remove(medioPagoEliminado);
-          return true;
-    
-}
+  
 }

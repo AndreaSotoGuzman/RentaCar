@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.tomcat.jni.Time;
@@ -27,12 +29,20 @@ public class ArriendoModel {
     private int idArriendo;
     private Date fechaArriendo;
     private Time horaArriendo;
+    
+    @ManyToOne
+    @JoinColumn (name = "id_vendedor")
     private PersonaModel vendedor;
+    
+    @ManyToOne
+    @JoinColumn (name = "id_cliente")
     private PersonaModel cliente;
+    @ManyToOne
+    @JoinColumn (name = "id_vehiculo")
     private VehiculoModel vehiculo;
+    @ManyToOne
+    @JoinColumn (name = "id_medio_pago")
     private MedioPagoModel medioPago;
-
-    public static ArrayList<ArriendoModel> arriendo = new ArrayList<>();
 
     public int getIdArriendo() {
         return idArriendo;
@@ -50,11 +60,11 @@ public class ArriendoModel {
         this.fechaArriendo = fechaArriendo;
     }
 
-    public Time gethoraArriendo() {
+    public Time getHoraArriendo() {
         return horaArriendo;
     }
 
-    public void sethoraArriendo(Time horaArriendo) {
+    public void setHoraArriendo(Time horaArriendo) {
         this.horaArriendo = horaArriendo;
     }
 
@@ -112,5 +122,8 @@ public class ArriendoModel {
         this.medioPago = medioPago;
     }
 
+   
+
+ 
    
 }

@@ -7,13 +7,24 @@ package autos.rentacar.demo.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Andreita
  */
+@Entity
+@Table(name="persona")
 public class PersonaModel {
-
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPersona;
     private String run;
     private String nombre;
@@ -22,10 +33,13 @@ public class PersonaModel {
     private String telefono;
     private String direccion1;
     private String direccion2;
+    
+    @ManyToOne
+    @JoinColumn (name = "id_ciudad")
     private CiudadModel ciudad;
+     @ManyToOne
+    @JoinColumn (name = "id_tipo_persona")
     private TipoPersonaModel tipoPersona;
-
-    public static ArrayList<PersonaModel> persona = new ArrayList<>();
 
     public int getIdPersona() {
         return idPersona;
@@ -122,7 +136,7 @@ public class PersonaModel {
         this.tipoPersona = tipoPersona;
     }
 
-    public PersonaModel(int idPersona, String run, String nombre, String apellido, Date fechaNacimiento, String telefono, String direccion1, String direccion2, CiudadModel ciudad, TipoPersonaModel tipoPersona) {
+    private PersonaModel(int idPersona, String run, String nombre, String apellido, Date fechaNacimiento, String telefono, String direccion1, String direccion2, CiudadModel ciudad, TipoPersonaModel tipoPersona) {
         this.idPersona = idPersona;
         this.run = run;
         this.nombre = nombre;
@@ -135,85 +149,5 @@ public class PersonaModel {
         this.tipoPersona = tipoPersona;
     }
 
-    public boolean nuevoPersona(PersonaModel nuevoPersona) { //void no tiene retorno
-
-        int id = 0;
-
-        if (!persona.isEmpty()) {
-            for (PersonaModel a : persona) {
-
-                if (a.getIdPersona() > id) {
-                    id = a.getIdPersona();
-
-                }
-            }
-        }
-        id++;
-        persona.add(new PersonaModel(id, nuevoPersona.getRun(), nuevoPersona.getNombre(), nuevoPersona.getApellido(), nuevoPersona.getFechaNacimiento(), nuevoPersona.getTelefono(), nuevoPersona.getDireccion1(), nuevoPersona.getDireccion2(), nuevoPersona.getCiudad(), nuevoPersona.getTipoPersona()));
-        return true;
-
-    }
-
-    public PersonaModel buscaPersona(int idPersonaBuscar) { // función necesita un retorno
-
-        PersonaModel personaEncontrado = null;
-        if (!persona.isEmpty()) {
-            for (PersonaModel a : persona) {
-
-                if (a.getIdPersona() == idPersonaBuscar) {
-                    personaEncontrado = a;
-
-                }
-
-            }
-
-        }
-        return personaEncontrado;
-    }
-
-    public PersonaModel editarPersona(int idPersona, PersonaModel personaEditar) {
-
-        PersonaModel personaEditado = null;
-        if (!persona.isEmpty()) {
-            for (PersonaModel a : persona) {
-
-                if (a.getIdPersona() == idPersona) {
-                    a.setRun(personaEditar.getRun());
-                    a.setNombre(personaEditar.getNombre());
-                    a.setApellido(personaEditar.getApellido());
-                    a.setFechaNacimiento(personaEditar.getFechaNacimiento());
-                    a.setTelefono(personaEditar.getTelefono());
-                    a.setDireccion1(personaEditar.getDireccion1());
-                    a.setDireccion2(personaEditar.getDireccion2());
-                    a.setCiudad(personaEditar.getCiudad());
-                    a.setTipoPersona(personaEditar.getTipoPersona());
-
-                    personaEditado = a;
-                }
-
-            }
-
-        }
-        return personaEditado;
-    }
-
-    public boolean elimnarPersona(int id) {
-
-        PersonaModel personaEliminado = null;
-
-        if (!persona.isEmpty()) {
-            for (PersonaModel a : persona) {
-
-                if (a.getIdPersona() == id) {
-                    personaEliminado = a;
-
-                }
-
-            }
-        }
-        persona.remove(personaEliminado);
-        return true;
-
-    }
-
+   
 }

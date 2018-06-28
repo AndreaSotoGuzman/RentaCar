@@ -7,6 +7,13 @@ package autos.rentacar.demo.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import org.apache.tomcat.jni.Time;
 
 
@@ -16,14 +23,19 @@ import org.apache.tomcat.jni.Time;
  *
  * @author Andreita
  */
+@Entity
+@Table(name="devolucion")
 public class DevolucionModel {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idDevolucion;
     private Date fechaDevolucion;
     private Time horaDevolucion;
+    
+    @ManyToOne
+    @JoinColumn(name="id_arriendo")
     private ArriendoModel arriendo;
-
-    public static ArrayList<DevolucionModel> devolucion = new ArrayList<>();
 
     public int getIdDevolucion() {
         return idDevolucion;
@@ -73,79 +85,7 @@ public class DevolucionModel {
         this.arriendo = arriendo;
     }
 
-    public boolean nuevoDevolucion(DevolucionModel nuevoDevolucion) { //void no tiene retorno
+    
 
-        int id = 0;
-
-        if (!devolucion.isEmpty()) {
-            for (DevolucionModel a : devolucion) {
-
-                if (a.getIdDevolucion() > id) {
-                    id = a.getIdDevolucion();
-
-                }
-            }
-        }
-        id++;
-        devolucion.add(new DevolucionModel(id, nuevoDevolucion.getFechaDevolucion(), nuevoDevolucion.getHoraDevolucion(), nuevoDevolucion.getArriendo()));
-        return true;
-
-    }
-
-    public DevolucionModel buscaDevolucion(int idDevolucionBuscar) { // función necesita un retorno
-
-        DevolucionModel devolucionEncontrado = null;
-        if (!devolucion.isEmpty()) {
-            for (DevolucionModel a : devolucion) {
-
-                if (a.getIdDevolucion() == idDevolucionBuscar) {
-                    devolucionEncontrado = a;
-
-                }
-
-            }
-
-        }
-        return devolucionEncontrado;
-    }
-
-    public DevolucionModel editarDevolucion(int idDevolucion, DevolucionModel devolucionEditar) {
-
-        DevolucionModel devolucionEditado = null;
-        if (!devolucion.isEmpty()) {
-            for (DevolucionModel a : devolucion) {
-
-                if (a.getIdDevolucion() == idDevolucion) {
-
-                    a.setFechaDevolucion(devolucionEditar.getFechaDevolucion());
-                    a.setHoraDevolucion(devolucionEditar.getHoraDevolucion());
-                    a.setArriendo(devolucionEditar.getArriendo());
-
-                    devolucionEditado = a;
-                }
-
-            }
-
-        }
-        return devolucionEditado;
-    }
-
-    public boolean elimnarDevolucion(int id) {
-
-        DevolucionModel devolucionEliminado = null;
-
-        if (!devolucion.isEmpty()) {
-            for (DevolucionModel a : devolucion) {
-
-                if (a.getIdDevolucion() == id) {
-                    devolucionEliminado = a;
-
-                }
-
-            }
-        }
-        devolucion.remove(devolucionEliminado);
-        return true;
-
-    }
+   
 }

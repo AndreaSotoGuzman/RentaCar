@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.CiudadModel;
+import autos.rentacar.demo.repository.CiudadRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -26,54 +29,79 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/ciudad")
 public class CiudadController {
     
-    @GetMapping()
-    public List<CiudadModel> list() {
-        
-        return CiudadModel.ciudad;
-    }
+   @Autowired
+   private CiudadRepository ciudadRepository;
     
-    @GetMapping("/{id}")
-    public CiudadModel get(@PathVariable String id) {
+
+  @GetMapping()
+    public Iterable<CiudadModel> listarTodos() {
         
-        CiudadModel ciudad= new CiudadModel();
-        
-        return ciudad.buscaCiudad(Integer.parseInt(id));
+        return ciudadRepository.findAll();
     }
-    
+
+   @GetMapping()
+    public ResponseEntity<CiudadModel> muestraUnaCiudad(@PathVariable String id) {
+        
+        Optional<CiudadModel> aOptional = ciudadRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+            CiudadModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.FOUND);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        
+        
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody CiudadModel ciudadEditar) {
+    public ResponseEntity<CiudadModel> editaCiudad(@PathVariable String id, @RequestBody CiudadModel ciudadEditar) {
         
-        CiudadModel ciudad = new CiudadModel();
-          
-        
-        return new ResponseEntity<>(ciudad.editarCiudad(Integer.parseInt(id), ciudadEditar), HttpStatus.OK);
-    }
-    
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody CiudadModel nuevoCiudad) {
-        
-        CiudadModel ciudad = new CiudadModel();
-        
-        if(ciudad.nuevoCiudad(nuevoCiudad)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }else{
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+         Optional<CiudadModel> aOptional = ciudadRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           CiudadModel aEncontrado = aOptional.get();  
+            
+            ciudadEditar.setIdCiudad(aEncontrado.getIdCiudad());
+                                
+            ciudadRepository.save(ciudadEditar);           
+            return new ResponseEntity<>(ciudadEditar, HttpStatus.OK);
+            
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         
     }
     
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-         CiudadModel ciudad = new CiudadModel();
-         
-         if(ciudad.eliminarCiudad(Integer.parseInt(id))){
-             return new ResponseEntity<>(HttpStatus.OK);
-             
-         }else{
-             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-         }
+     @PostMapping
+    public ResponseEntity<?> agregarCiudad(@RequestBody CiudadModel nuevoCiudad) {
         
+      nuevoCiudad = ciudadRepository.save(nuevoCiudad);
+        
+      Optional<CiudadModel> aOptional = ciudadRepository.findById(nuevoCiudad.getIdCiudad());      
+        if (aOptional.isPresent()) {            
+            CiudadModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
       
+        
     }
+
+     @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        
+        Optional<CiudadModel> aOptional = ciudadRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           CiudadModel aEncontrado = aOptional.get();
+            
+            ciudadRepository.deleteById(aEncontrado.getIdCiudad());
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{ 
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }
+
     
+}
 }

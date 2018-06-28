@@ -6,25 +6,32 @@
 package autos.rentacar.demo.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author Andreita
  */
+@Entity
+@Table(name = "tipoPersona")
 public class TipoPersonaModel {
 
-    private int idPersona;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idTipoPersona;
     private String nombreTipoPersona;
     private String detalle;
 
-    public static ArrayList<TipoPersonaModel> tipoPersona = new ArrayList<>();
-
-    public int getIdPersona() {
-        return idPersona;
+    public int getIdTipoPersona() {
+        return idTipoPersona;
     }
 
-    public void setIdPersona(int idPersona) {
-        this.idPersona = idPersona;
+    public void setIdTipoPersona(int idTipoPersona) {
+        this.idTipoPersona = idTipoPersona;
     }
 
     public String getNombreTipoPersona() {
@@ -51,84 +58,10 @@ public class TipoPersonaModel {
         this.detalle = detalle;
     }
 
-    private TipoPersonaModel(int idPersona, String nombreTipoPersona, String detalle) {
-        this.idPersona = idPersona;
+    private TipoPersonaModel(int idTipoPersona, String nombreTipoPersona, String detalle) {
+        this.idTipoPersona = idTipoPersona;
         this.nombreTipoPersona = nombreTipoPersona;
         this.detalle = detalle;
     }
 
-    public boolean nuevoTipoPersona(TipoPersonaModel nuevoTipoPersona) { //void no tiene retorno
-
-        int id = 0;
-
-        if (!tipoPersona.isEmpty()) {
-            for (TipoPersonaModel a : tipoPersona) {
-
-                if (a.getIdPersona() > id) {
-                    id = a.getIdPersona();
-
-                }
-            }
-        }
-        id++;
-        tipoPersona.add(new TipoPersonaModel(id, nuevoTipoPersona.getNombreTipoPersona(), nuevoTipoPersona.getDetalle()));
-        return true;
-
-    }
-
-    public TipoPersonaModel buscaTipoPersona(int idTipoPersonaBuscar) { // función necesita un retorno
-
-        TipoPersonaModel tipoPersonaEncontrado = null;
-        if (!tipoPersona.isEmpty()) {
-            for (TipoPersonaModel a : tipoPersona) {
-
-                if (a.getIdPersona() == idTipoPersonaBuscar) {
-                    tipoPersonaEncontrado = a;
-
-                }
-
-            }
-
-        }
-        return tipoPersonaEncontrado;
-    }
-
-    public TipoPersonaModel editarTipoPersona(int idTipoPersona, TipoPersonaModel tipoPersonaEditar) {
-
-        TipoPersonaModel tipoPersonaEditado = null;
-        if (!tipoPersona.isEmpty()) {
-            for (TipoPersonaModel a : tipoPersona) {
-
-                if (a.getIdPersona() == idTipoPersona) {
-                    a.setNombreTipoPersona(tipoPersonaEditar.getNombreTipoPersona());
-                    a.setDetalle(tipoPersonaEditar.getDetalle());
-
-                    tipoPersonaEditado = a;
-                }
-
-            }
-
-        }
-        return tipoPersonaEditado;
-    }
-
-    public boolean eliminarTipoPersona(int id) {
-
-        TipoPersonaModel tipoPersonaEliminado = null;
-
-        if (!tipoPersona.isEmpty()) {
-            for (TipoPersonaModel a : tipoPersona) {
-
-                if (a.getIdPersona() == id) {
-                    tipoPersonaEliminado = a;
-
-                }
-
-            }
-        }
-
-        tipoPersona.remove(tipoPersonaEliminado);
-        return true;
-
-    }
 }

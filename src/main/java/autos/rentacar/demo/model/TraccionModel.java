@@ -6,18 +6,27 @@
 package autos.rentacar.demo.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author Andreita
  */
+@Entity
+@Table(name="traccion")
 public class TraccionModel {
 
+     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idTraccion;
     private String nombreTraccion;
     private String detalle;
 
-    public static ArrayList<TraccionModel> traccion = new ArrayList<>();
+   
 
     public int getIdTraccion() {
         return idTraccion;
@@ -57,78 +66,5 @@ public class TraccionModel {
         this.detalle = detalle;
     }
 
-    public boolean nuevoTraccion(TraccionModel nuevoTraccion) { //void no tiene retorno
-
-        int id = 0;
-
-        if (!traccion.isEmpty()) {
-            for (TraccionModel a : traccion) {
-
-                if (a.getIdTraccion() > id) {
-                    id = a.getIdTraccion();
-
-                }
-            }
-        }
-        id++;
-        traccion.add(new TraccionModel(id, nuevoTraccion.getNombreTraccion(), nuevoTraccion.getDetalle()));
-        return true;
-
-    }
-
-    public TraccionModel buscaTraccion(int idTraccionBuscar) { // función necesita un retorno
-
-        TraccionModel traccionEncontrado = null;
-        if (!traccion.isEmpty()) {
-            for (TraccionModel a : traccion) {
-
-                if (a.getIdTraccion() == idTraccionBuscar) {
-                    traccionEncontrado = a;
-
-                }
-
-            }
-
-        }
-        return traccionEncontrado;
-    }
-
-    public TraccionModel editarTraccion(int idTraccion, TraccionModel traccionEditar) {
-
-        TraccionModel traccionEditado = null;
-        if (!traccion.isEmpty()) {
-            for (TraccionModel a : traccion) {
-
-                if (a.getIdTraccion() == idTraccion) {
-                    a.setNombreTraccion(traccionEditar.getNombreTraccion());
-                    a.setDetalle(traccionEditar.getDetalle());
-
-                    traccionEditado = a;
-                }
-
-            }
-
-        }
-        return traccionEditado;
-    }
-
-    public boolean eliminarTraccion(int id) {
-
-        TraccionModel traccionEliminado = null;
-
-        if (!traccion.isEmpty()) {
-            for (TraccionModel a : traccion) {
-
-                if (a.getIdTraccion() == id) {
-                    traccionEliminado = a;
-
-                }
-
-            }
-        }
-        traccion.remove(traccionEliminado);
-        return true;
-
-    }
-
+  
 }

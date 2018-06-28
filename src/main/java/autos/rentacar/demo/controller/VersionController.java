@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.VersionModel;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -26,49 +28,79 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/version")
 public class VersionController {
     
-    @GetMapping()
-    public List<VersionModel> list() {
-        
-        return VersionModel.version;
-    }
+    @Autowired
+   private VersionRepository versionRepository;
     
-    @GetMapping("/{id}")
-    public VersionModel get(@PathVariable String id) {
-        VersionModel version = new VersionModel();
+
+  @GetMapping()
+    public Iterable<VersionModel> listarTodos() {
         
-        return version.buscaVersion(Integer.parseInt(id));
+        return versionRepository.findAll();
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody VersionModel versionEditar) {
-        VersionModel version = new VersionModel();
-        return new ResponseEntity<>(version.editarVersion(Integer.parseInt(id), versionEditar), HttpStatus.CREATED);
-    }
-    
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody VersionModel nuevoVersion) {
-        VersionModel version = new VersionModel();
+
+   @GetMapping()
+    public ResponseEntity<VersionModel> muestraUnaVersion(@PathVariable String id) {
         
-        if(version.nuevoVersion(nuevoVersion)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-            
-        }else{
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        Optional<VersionModel> aOptional = versionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+            VersionModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.FOUND);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-       
+        
+        
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VersionModel> editaVersion(@PathVariable String id, @RequestBody VersionModel versionEditar) {
+        
+         Optional<VersionModel> aOptional = versionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           VersionModel aEncontrado = aOptional.get();  
+            
+            versionEditar.setIdVersion(aEncontrado.getIdVersion());
+                                
+            versionRepository.save(versionEditar);           
+            return new ResponseEntity<>(versionEditar, HttpStatus.OK);
+            
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        
     }
     
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-         VersionModel version = new VersionModel();
-         
-         if(version.elimnarVersion(Integer.parseInt(id))){
-             return new ResponseEntity<>(HttpStatus.OK);
-         }else{
-             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-         }
+     @PostMapping
+    public ResponseEntity<?> agregarVersion(@RequestBody VersionModel nuevoVersion) {
         
-       
+      nuevoVersion = versionRepository.save(nuevoVersion);
+        
+      Optional<VersionModel> aOptional = versionRepository.findById(nuevoVersion.getIdVersion());      
+        if (aOptional.isPresent()) {            
+            VersionModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+      
+        
     }
+
+     @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        
+        Optional<VersionModel> aOptional = versionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           VersionModel aEncontrado = aOptional.get();
+            
+            versionRepository.deleteById(aEncontrado.getIdVersion());
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{ 
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }
+
+}
     
 }

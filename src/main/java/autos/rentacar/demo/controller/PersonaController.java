@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.PersonaModel;
+import autos.rentacar.demo.repository.PersonaRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -26,52 +29,79 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/persona")
 public class PersonaController {
     
-    @GetMapping()
-    public List<PersonaModel> list() {
-        
-        
-        return PersonaModel.persona;
-    }
+  
+   @Autowired
+   private PersonaRepository personaRepository;
     
-    @GetMapping("/{id}")
-    public PersonaModel get(@PathVariable String id) {
+
+  @GetMapping()
+    public Iterable<PersonaModel> listarTodos() {
         
-        PersonaModel persona = new PersonaModel();
-        
-        return persona.buscaPersona(Integer.parseInt(id));
+        return personaRepository.findAll();
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody PersonaModel editarPersona) {
-        PersonaModel persona = new PersonaModel();
+
+   @GetMapping()
+    public ResponseEntity<PersonaModel> muestraUnaPersona(@PathVariable String id) {
         
-        return new ResponseEntity<>(persona.editarPersona(Integer.parseInt(id), editarPersona), HttpStatus.CREATED);
-    }
-    
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody PersonaModel nuevoPersona) {
-        
-        PersonaModel persona = new PersonaModel();
-        if(persona.nuevoPersona(nuevoPersona)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-            
-        }else{
-             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        Optional<PersonaModel> aOptional = personaRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+            PersonaModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.FOUND);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-       
+        
+        
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonaModel> editaPersona(@PathVariable String id, @RequestBody PersonaModel personaEditar) {
+        
+         Optional<PersonaModel> aOptional = personaRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           PersonaModel aEncontrado = aOptional.get();  
+            
+            personaEditar.setIdPersona(aEncontrado.getIdPersona());
+                                
+            personaRepository.save(personaEditar);           
+            return new ResponseEntity<>(personaEditar, HttpStatus.OK);
+            
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         
     }
     
-    @DeleteMapping("/{id}")
+     @PostMapping
+    public ResponseEntity<?> agregarPersona(@RequestBody PersonaModel nuevoPersona) {
+        
+      nuevoPersona = personaRepository.save(nuevoPersona);
+        
+      Optional<PersonaModel> aOptional = personaRepository.findById(nuevoPersona.getIdPersona());      
+        if (aOptional.isPresent()) {            
+            PersonaModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+      
+        
+    }
+
+     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
-         PersonaModel persona = new PersonaModel();
-         if(persona.elimnarPersona(Integer.parseInt(id))){
-              return new ResponseEntity<>(HttpStatus.OK);
-         }else{
-              return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-         }
         
-        
-    }
-    
+        Optional<PersonaModel> aOptional = personaRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           PersonaModel aEncontrado = aOptional.get();
+            
+            personaRepository.deleteById(aEncontrado.getIdPersona());
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{ 
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }
+
+}
 }

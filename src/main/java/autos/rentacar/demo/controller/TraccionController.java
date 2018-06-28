@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.TraccionModel;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -26,47 +28,79 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/traccion")
 public class TraccionController {
     
-    @GetMapping()
-    public List<TraccionModel> list() {
+    @Autowired
+   private TraccionRepository traccionRepository;
+    
+
+  @GetMapping()
+    public Iterable<TraccionModel> listarTodos() {
         
-        return TraccionModel.traccion;
+        return traccionRepository.findAll();
     }
-    
-    @GetMapping("/{id}")
-    public TraccionModel get(@PathVariable String id) {
-       TraccionModel traccion = new TraccionModel();
-       
-        return traccion.buscaTraccion(Integer.parseInt(id));
+
+   @GetMapping()
+    public ResponseEntity<TraccionModel> muestraUnaTraccion(@PathVariable String id) {
+        
+        Optional<TraccionModel> aOptional = traccionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+            TraccionModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.FOUND);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        
+        
     }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody TraccionModel traccionEditar){
-        TraccionModel traccion = new TraccionModel();
-                    
-        return new ResponseEntity<>(traccion.editarTraccion(Integer.parseInt(id), traccionEditar), HttpStatus.CREATED);
-    }
-    
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody TraccionModel nuevoTraccion) {
-        TraccionModel traccion = new TraccionModel();
-        if(traccion.nuevoTraccion(nuevoTraccion)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }else{
-             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
-       
-    }
-    
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-        TraccionModel traccion = new TraccionModel();
+    public ResponseEntity<TraccionModel> editaTraccion(@PathVariable String id, @RequestBody TraccionModel traccionEditar) {
         
-        if(traccion.eliminarTraccion(Integer.parseInt(id))){
-              return new ResponseEntity<>(HttpStatus.OK);
-        }else{
-              return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+         Optional<TraccionModel> aOptional = traccionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           TraccionModel aEncontrado = aOptional.get();  
+            
+            traccionEditar.setIdTraccion(aEncontrado.getIdTraccion());
+                                
+            traccionRepository.save(traccionEditar);           
+            return new ResponseEntity<>(traccionEditar, HttpStatus.OK);
+            
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-       
+        
     }
+    
+     @PostMapping
+    public ResponseEntity<?> agregarTraccion(@RequestBody TraccionModel nuevoTraccion) {
+        
+      nuevoTraccion = traccionRepository.save(nuevoTraccion);
+        
+      Optional<TraccionModel> aOptional = traccionRepository.findById(nuevoTraccion.getIdTraccion());      
+        if (aOptional.isPresent()) {            
+            TraccionModel aEncontrado = aOptional.get();            
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{       
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+      
+        
+    }
+
+     @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        
+        Optional<TraccionModel> aOptional = traccionRepository.findById(Integer.parseInt(id));      
+        if (aOptional.isPresent()) {            
+           TraccionModel aEncontrado = aOptional.get();
+            
+            traccionRepository.deleteById(aEncontrado.getIdTraccion());
+            return new ResponseEntity<>(aEncontrado, HttpStatus.OK);
+        }else{ 
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }
+
+}
     
 }

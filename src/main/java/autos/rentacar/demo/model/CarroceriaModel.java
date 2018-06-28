@@ -25,8 +25,7 @@ public class CarroceriaModel {
     private String nombreCarroceria;
     private String detalle;
 
-    public static ArrayList<CarroceriaModel> carroceria = new ArrayList<>();
-
+   
     public int getIdCarroceria() {
         return idCarroceria;
     }
