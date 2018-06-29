@@ -6,12 +6,12 @@
 package autos.rentacar.demo.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import autos.rentacar.demo.model.ArriendoModel;
+import autos.rentacar.demo.model.TipoPersonaModel;
 
 /**
  *
  * @author Andreita
  */
-public interface ArriendoRepository extends CrudRepository<ArriendoModel, Integer> {
+public interface TipoPersonaRepository extends CrudRepository<TipoPersonaModel, Integer> {
     
 }

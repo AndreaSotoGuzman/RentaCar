@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.ArriendoModel;
-import org.springframework.http.HttpStatus;
 import autos.rentacar.demo.repository.ArriendoRepository;
+
+import org.springframework.http.HttpStatus;
+
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
