@@ -39,7 +39,7 @@ public class TipoPersonaController {
         return tipoPersonaRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<TipoPersonaModel> muestraUnTipoPersona(@PathVariable String id) {
         
         Optional<TipoPersonaModel> aOptional = tipoPersonaRepository.findById(Integer.parseInt(id));      

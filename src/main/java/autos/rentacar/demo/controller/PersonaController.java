@@ -40,7 +40,7 @@ public class PersonaController {
         return personaRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<PersonaModel> muestraUnaPersona(@PathVariable String id) {
         
         Optional<PersonaModel> aOptional = personaRepository.findById(Integer.parseInt(id));      

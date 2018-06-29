@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import autos.rentacar.demo.model.ArriendoModel;
 import autos.rentacar.demo.repository.ArriendoRepository;
-
 import org.springframework.http.HttpStatus;
-
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,8 +39,8 @@ public class ArriendoController {
         return arriendoRepository.findAll();
     }
 
-   @GetMapping()
-    public ResponseEntity<ArriendoModel> muestraUnaArriendo(@PathVariable String id) {
+   @GetMapping("/{id}")
+    public ResponseEntity<ArriendoModel> muestraUnArriendo(@PathVariable String id) {
         
         Optional<ArriendoModel> aOptional = arriendoRepository.findById(Integer.parseInt(id));      
         if (aOptional.isPresent()) {            

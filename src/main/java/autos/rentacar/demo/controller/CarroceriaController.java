@@ -39,7 +39,7 @@ public class CarroceriaController {
         return carroceriaRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<CarroceriaModel> muestraUnaCarroceria(@PathVariable String id) {
         
         Optional<CarroceriaModel> aOptional = carroceriaRepository.findById(Integer.parseInt(id));      
@@ -72,11 +72,11 @@ public class CarroceriaController {
     }
     
      @PostMapping
-    public ResponseEntity<?> agregarArriendo(@RequestBody CarroceriaModel nuevoArriendo) {
+    public ResponseEntity<?> agregarCarroceria(@RequestBody CarroceriaModel nuevoCarroceria) {
         
-      nuevoArriendo = carroceriaRepository.save(nuevoArriendo);
+      nuevoCarroceria = carroceriaRepository.save(nuevoCarroceria);
         
-      Optional<CarroceriaModel> aOptional = carroceriaRepository.findById(nuevoArriendo.getIdCarroceria());      
+      Optional<CarroceriaModel> aOptional = carroceriaRepository.findById(nuevoCarroceria.getIdCarroceria());      
         if (aOptional.isPresent()) {            
             CarroceriaModel aEncontrado = aOptional.get();            
             return new ResponseEntity<>(aEncontrado, HttpStatus.OK);

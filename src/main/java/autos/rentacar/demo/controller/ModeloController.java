@@ -38,7 +38,7 @@ public class ModeloController {
         return modeloRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<ModeloModel> muestraUnModelo(@PathVariable String id) {
         
         Optional<ModeloModel> aOptional = modeloRepository.findById(Integer.parseInt(id));      

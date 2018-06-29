@@ -39,7 +39,7 @@ public class TraccionController {
         return traccionRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<TraccionModel> muestraUnaTraccion(@PathVariable String id) {
         
         Optional<TraccionModel> aOptional = traccionRepository.findById(Integer.parseInt(id));      

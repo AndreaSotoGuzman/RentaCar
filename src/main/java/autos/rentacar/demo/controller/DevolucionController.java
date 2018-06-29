@@ -39,7 +39,7 @@ public class DevolucionController {
         return devolucionRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<DevolucionModel> muestraUnaDevolucion(@PathVariable String id) {
         
         Optional<DevolucionModel> aOptional = devolucionRepository.findById(Integer.parseInt(id));      

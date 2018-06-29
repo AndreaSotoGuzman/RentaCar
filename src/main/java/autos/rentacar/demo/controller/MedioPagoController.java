@@ -39,8 +39,8 @@ public class MedioPagoController {
         return medioPagoRepository.findAll();
     }
 
-   @GetMapping()
-    public ResponseEntity<MedioPagoModel> muestraUnaArriendo(@PathVariable String id) {
+   @GetMapping("/{id}")
+    public ResponseEntity<MedioPagoModel> muestraUnMedioPago(@PathVariable String id) {
         
         Optional<MedioPagoModel> aOptional = medioPagoRepository.findById(Integer.parseInt(id));      
         if (aOptional.isPresent()) {            

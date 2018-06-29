@@ -38,7 +38,7 @@ public class MarcaController {
         return marcaRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<MarcaModel> muestraUnMarca(@PathVariable String id) {
         
         Optional<MarcaModel> aOptional = marcaRepository.findById(Integer.parseInt(id));      
@@ -71,7 +71,7 @@ public class MarcaController {
     }
     
      @PostMapping
-    public ResponseEntity<?> agregarArriendo(@RequestBody MarcaModel nuevoMarca) {
+    public ResponseEntity<?> agregarMarca(@RequestBody MarcaModel nuevoMarca) {
         
       nuevoMarca = marcaRepository.save(nuevoMarca);
         

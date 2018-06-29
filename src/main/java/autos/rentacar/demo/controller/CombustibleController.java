@@ -38,7 +38,7 @@ public class CombustibleController {
         return combustibleRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<CombustibleModel> muestraUnCombustible(@PathVariable String id) {
         
         Optional<CombustibleModel> aOptional = combustibleRepository.findById(Integer.parseInt(id));      
@@ -53,7 +53,7 @@ public class CombustibleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CombustibleModel> editaArriendo(@PathVariable String id, @RequestBody CombustibleModel combustibleEditar) {
+    public ResponseEntity<CombustibleModel> editaCombustible(@PathVariable String id, @RequestBody CombustibleModel combustibleEditar) {
         
          Optional<CombustibleModel> aOptional = combustibleRepository.findById(Integer.parseInt(id));      
         if (aOptional.isPresent()) {            

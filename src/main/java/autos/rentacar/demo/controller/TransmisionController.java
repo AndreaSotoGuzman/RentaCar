@@ -39,7 +39,7 @@ public class TransmisionController {
         return transmisionRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<TransmisionModel> muestraUnaTransmision(@PathVariable String id) {
         
         Optional<TransmisionModel> aOptional = transmisionRepository.findById(Integer.parseInt(id));      
@@ -54,7 +54,7 @@ public class TransmisionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TransmisionModel> editaArriendo(@PathVariable String id, @RequestBody TransmisionModel transmisionEditar) {
+    public ResponseEntity<TransmisionModel> editaTransmision(@PathVariable String id, @RequestBody TransmisionModel transmisionEditar) {
         
          Optional<TransmisionModel> aOptional = transmisionRepository.findById(Integer.parseInt(id));      
         if (aOptional.isPresent()) {            

@@ -6,15 +6,23 @@
 package autos.rentacar.demo.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Andreita
  */
+@Entity
+@Table(name="ciudad")
 public class CiudadModel {
-
+   @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int idCiudad;
     private String nombreCiudad;
     private String detalle;

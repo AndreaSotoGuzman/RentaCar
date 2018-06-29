@@ -14,7 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import org.apache.tomcat.jni.Time;
+
 
 
 
@@ -31,7 +31,7 @@ public class DevolucionModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idDevolucion;
     private Date fechaDevolucion;
-    private Time horaDevolucion;
+    
     
     @ManyToOne
     @JoinColumn(name="id_arriendo")
@@ -53,14 +53,6 @@ public class DevolucionModel {
         this.fechaDevolucion = fechaDevolucion;
     }
 
-    public Time getHoraDevolucion() {
-        return horaDevolucion;
-    }
-
-    public void setHoraDevolucion(Time horaDevolucion) {
-        this.horaDevolucion = horaDevolucion;
-    }
-
     public ArriendoModel getArriendo() {
         return arriendo;
     }
@@ -69,22 +61,21 @@ public class DevolucionModel {
         this.arriendo = arriendo;
     }
 
+    public DevolucionModel(Date fechaDevolucion, ArriendoModel arriendo) {
+        this.fechaDevolucion = fechaDevolucion;
+        this.arriendo = arriendo;
+    }
+
     public DevolucionModel() {
     }
 
-    public DevolucionModel(Date fechaDevolucion, Time horaDevolucion, ArriendoModel arriendo) {
-        this.fechaDevolucion = fechaDevolucion;
-        this.horaDevolucion = horaDevolucion;
-        this.arriendo = arriendo;
-    }
-
-    private DevolucionModel(int idDevolucion, Date fechaDevolucion, Time horaDevolucion, ArriendoModel arriendo) {
+    public DevolucionModel(int idDevolucion, Date fechaDevolucion, ArriendoModel arriendo) {
         this.idDevolucion = idDevolucion;
         this.fechaDevolucion = fechaDevolucion;
-        this.horaDevolucion = horaDevolucion;
         this.arriendo = arriendo;
     }
 
+   
     
 
    

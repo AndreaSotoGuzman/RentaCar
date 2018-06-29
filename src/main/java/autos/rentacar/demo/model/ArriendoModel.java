@@ -15,7 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.apache.tomcat.jni.Time;
+
 
 /**
  *
@@ -27,8 +27,8 @@ public class ArriendoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idArriendo;
+  
     private Date fechaArriendo;
-    private Time horaArriendo;
     
     @ManyToOne
     @JoinColumn (name = "id_vendedor")
@@ -37,9 +37,11 @@ public class ArriendoModel {
     @ManyToOne
     @JoinColumn (name = "id_cliente")
     private PersonaModel cliente;
+    
     @ManyToOne
     @JoinColumn (name = "id_vehiculo")
     private VehiculoModel vehiculo;
+    
     @ManyToOne
     @JoinColumn (name = "id_medio_pago")
     private MedioPagoModel medioPago;
@@ -58,14 +60,6 @@ public class ArriendoModel {
 
     public void setFechaArriendo(Date fechaArriendo) {
         this.fechaArriendo = fechaArriendo;
-    }
-
-    public Time getHoraArriendo() {
-        return horaArriendo;
-    }
-
-    public void setHoraArriendo(Time horaArriendo) {
-        this.horaArriendo = horaArriendo;
     }
 
     public PersonaModel getVendedor() {
@@ -103,27 +97,24 @@ public class ArriendoModel {
     public ArriendoModel() {
     }
 
-    public ArriendoModel(Date fechaArriendo, Time horaArriendo, PersonaModel vendedor, PersonaModel cliente, VehiculoModel vehiculo, MedioPagoModel medioPago) {
+    public ArriendoModel(Date fechaArriendo, PersonaModel vendedor, PersonaModel cliente, VehiculoModel vehiculo, MedioPagoModel medioPago) {
         this.fechaArriendo = fechaArriendo;
-        this.horaArriendo = horaArriendo;
         this.vendedor = vendedor;
         this.cliente = cliente;
         this.vehiculo = vehiculo;
         this.medioPago = medioPago;
     }
 
-    private ArriendoModel(int idArriendo, Date fechaArriendo, Time horaArriendo, PersonaModel vendedor, PersonaModel cliente, VehiculoModel vehiculo, MedioPagoModel medioPago) {
+   private ArriendoModel(int idArriendo, Date fechaArriendo, PersonaModel vendedor, PersonaModel cliente, VehiculoModel vehiculo, MedioPagoModel medioPago) {
         this.idArriendo = idArriendo;
         this.fechaArriendo = fechaArriendo;
-        this.horaArriendo = horaArriendo;
         this.vendedor = vendedor;
         this.cliente = cliente;
         this.vehiculo = vehiculo;
         this.medioPago = medioPago;
     }
 
-   
-
+  
  
    
 }

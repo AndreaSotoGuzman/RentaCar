@@ -39,7 +39,7 @@ public class VersionController {
         return versionRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<VersionModel> muestraUnaVersion(@PathVariable String id) {
         
         Optional<VersionModel> aOptional = versionRepository.findById(Integer.parseInt(id));      

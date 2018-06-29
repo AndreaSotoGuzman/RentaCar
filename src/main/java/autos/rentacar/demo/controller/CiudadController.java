@@ -39,7 +39,7 @@ public class CiudadController {
         return ciudadRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<CiudadModel> muestraUnaCiudad(@PathVariable String id) {
         
         Optional<CiudadModel> aOptional = ciudadRepository.findById(Integer.parseInt(id));      

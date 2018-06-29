@@ -39,7 +39,7 @@ public class TipoVehiculoController {
         return tipoVehiculoRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<TipoVehiculoModel> muestraUnTipoVehiculo(@PathVariable String id) {
         
         Optional<TipoVehiculoModel> aOptional = tipoVehiculoRepository.findById(Integer.parseInt(id));      

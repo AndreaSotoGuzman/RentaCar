@@ -40,7 +40,7 @@ public class RegionController {
         return regionRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity<RegionModel> muestraUnaRegion(@PathVariable String id) {
         
         Optional<RegionModel> aOptional = regionRepository.findById(Integer.parseInt(id));      

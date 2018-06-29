@@ -39,7 +39,7 @@ public class VehiculoController {
         return  vehiculoRepository.findAll();
     }
 
-   @GetMapping()
+   @GetMapping("/{id}")
     public ResponseEntity< VehiculoModel> muestraUnVehiculo(@PathVariable String id) {
         
         Optional< VehiculoModel> aOptional =  vehiculoRepository.findById(Integer.parseInt(id));      
